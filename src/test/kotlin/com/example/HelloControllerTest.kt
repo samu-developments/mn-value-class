@@ -20,4 +20,22 @@ class HelloControllerTest(
 
         body.value shouldBe "Hello world"
     }
+
+    "can say hello container" {
+        val request = HttpRequest.GET<Any>("/container")
+
+        // Fails
+        val body = client.toBlocking().retrieve(request, HelloContainer::class.java)
+
+        body.hello.value shouldBe "Hello world"
+    }
+
+    "can say hello phantom" {
+        val request = HttpRequest.GET<Any>("/phantom")
+
+        // Works
+        val body = client.toBlocking().retrieve(request, HelloContainerWithPhantom::class.java)
+
+        body.hello.value shouldBe "Hello world"
+    }
 })
