@@ -19,4 +19,24 @@ class HelloSerdeTest(
 
         deserialized.value shouldBe hello.value
     }
+
+    "can serde hello data container class" {
+        val helloContainer = HelloContainer(Hello("hey"))
+        val serialized = om.writeValueAsString(helloContainer)
+
+        // Fails
+        val deserialized = om.readValue(serialized, HelloContainer::class.java)
+
+        deserialized.hello.value shouldBe helloContainer.hello.value
+    }
+
+    "can serde hello data container phantom class" {
+        val helloContainer = HelloContainerWithPhantom(Hello("hey"))
+        val serialized = om.writeValueAsString(helloContainer)
+
+        // Works
+        val deserialized = om.readValue(serialized, HelloContainerWithPhantom::class.java)
+
+        deserialized.hello.value shouldBe helloContainer.hello.value
+    }
 })
